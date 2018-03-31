@@ -1,0 +1,24 @@
+{
+  "name": "codinggame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon"
+  },
+  "repository": {
+    "type":"git",
+    "url": "https://github.com/EonJungKim/Game"
+  },
+  "author": "sw",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.2.0",
+    "mongoose": "^5.0.0-rc2",
+    "nodemon": "^1.14.12"
+  }
+}
