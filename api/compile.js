@@ -1,3 +1,7 @@
+/* 로그인 되어있는 Client의 게임과 관련된 Request만 받음
+ * ID 등의 기본적인 User Information은 Client로부터 받음
+ */
+
 var express = require('express')
 var router = express.Router()
 var code = require('../model/code')
@@ -13,18 +17,21 @@ var util = require('../util')
 /// //////////////////////////////////////////////////////////////////
 
 router.post('/:username', function (req, res) {
-  var data = req.body.code
-  var mode = req.body.mode
-  var filename = req.params.username
+  var data = req.body.code || req.query.code // Code
+  var languageMode = req.body.languageMode || req.query.languageMode // 언어 식별
+  var fileName = req.body.fileName || req.query.fineName
+  var userName = req.body.userName || req.query.username
+  var gameMode = req.body.gameMode || req.query.gameMode
 
-  if (mode === 'c_cpp') {
-    fs.writeFile(`${__dirname}/${username}/${filename}.c`, data, 'utf8', function (err) {
+  if (languageMode === 'c_cpp') {
+    fs.writeFile(`${__dirname}/${userName}/${gameMode}/${fileName}.c`, data, 'utf8', function (err) {
       if (err) {
         console.log(err)
         res.json(util.successFalse(err))
       } else { // start compile
         console.log('create OK ========')
 
+        // spawn :  Terminal에 gcc + 문자열 올려줌
         var compile = spawn('gcc', [`${__dirname}/${username}/${filename}.c`])
 
         compile.stdout.on('data', (data) => {
@@ -55,9 +62,13 @@ router.post('/:username', function (req, res) {
         })
       }
     })
-  } else if (mode === 'java') {
+  } else if (languageMode === 'java') {
 
-  }
+  } else if (languageMode === 'javascript') {
+      
+  } else if (languageMode === 'C#') {
+      
+  } 
 })
 
 router.get(`/`, function (req, res) {

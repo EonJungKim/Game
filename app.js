@@ -1,21 +1,36 @@
 var express = require('express')
+var http = require('http')
 var mongoose = require('mongoose')
 var bodyParser = require('body-parser')
 var path = require('path')
 var app = express()
 
-mongoose.connect('mongodb://server:codinggame@ds231199.mlab.com:31199/codinggame')
-var db = mongoose.connection
+var userRouter = require('./api/user')
+var authRouter = require('./api/auth')
+var compileRouter = require('./api/compile')
 
-db.once('open', function () {
-  console.log('DB connection')
-})
+var database
 
-db.on('error', function () {
-  // error
-})
+// Database Connect
+function connectDB () {
+  // var databaseUrl = 'mongodb://server:codinggame@ds231199.mlab.com:31199/codinggame'
+  var databaseUrl = 'mongodb://localhost:27017/local'
+  mongoose.Promise = global.Promise
+  mongoose.connect(databaseUrl)
+  database = mongoose.connection
+  database.on('open', function () {
+    console.log('Database is connected : ' + databaseUrl)
+  })
 
-// Other settings
+  database.on('dissconnected', function () {
+    console.log('Database is disconnected. Try to connect in 5 seconds.')
+    setInterval(connectDB, 5000)
+  })
+
+  database.on('error', console.error.bind(console, 'mongoose connection error'))
+}
+
+// Header Setting
 app.disable('Etag')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
@@ -27,15 +42,17 @@ app.use(function (req, res, next) { // 1
   next()
 })
 
-// api로 요청을 받는 경우에는 한 폴더로 묶어놓는 것이 좋음
-// 1. 회원가입, 회원정보 수정 등
-// 2. 로그인 로그아웃 컨트롤
-// 3.
+app.use(express.static('api'))
+app.use(authRouter)
+app.use(userRouter)
+app.use(compileRouter)
 
-app.use('/api/game', require('./api/compile'))
+// Set port to 8080
+app.set('port', process.env.PORT || 3031)
 
-// Port setting
-var port = process.env.PORT || 8080
-app.listen(port, function () {
-  console.log('server on!')
+var server = http.createServer(app).listen(app.get('port'), function () {
+  console.log('익스프레스로 웹 서버를 실행함 : ' + app.get('port'))
+  connectDB()
 })
+
+module.exports = database
