@@ -6,7 +6,6 @@ var userModel = require('../model/user')
 var util = require('../util')
 var jwt = require('jsonwebtoken')
 var database = require('../app')
-var crypto = require('crypto')
 
 var router = express.Router()
 
@@ -42,8 +41,6 @@ router.get('/process/login', function (req, res) {
 
         var payload = {
           '_id': results[0]._doc._id,
-          'userId': results[0]._doc.userId,
-          'name': results[0]._doc.name,
           'eMail': results[0]._doc.eMail
         }
 
@@ -52,6 +49,7 @@ router.get('/process/login', function (req, res) {
         var options = {expiresIn: 60 * 60 * 24}
         jwt.sign(payload, secretOrPrivateKey, options, function (err, token) {
           if (err) {
+            console.log('aa')
             return res.json(util.successFalse(err))
           }
 

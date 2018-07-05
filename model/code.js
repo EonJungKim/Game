@@ -1,5 +1,4 @@
 var mongoose = require('mongoose')
-var bcrypt = require('bcrypt-nodejs')
 
 var codeSchema = mongoose.Schema({
   writer: {type: String, require: true},

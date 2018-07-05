@@ -49,10 +49,12 @@ router.post('/:username', function (req, res) {
 
             run.stdout.on('data', function (output) {
               console.log(String(output))
+              return res.json(util.successTrue(String(output)))
             })
 
             run.stderr.on('data', function (output) {
               console.log(String(output))
+              return res.json(util.successFalse(err, String(output)))
             })
 
             run.on('close', function (output) {
@@ -65,10 +67,10 @@ router.post('/:username', function (req, res) {
   } else if (languageMode === 'java') {
 
   } else if (languageMode === 'javascript') {
-      
+
   } else if (languageMode === 'C#') {
-      
-  } 
+
+  }
 })
 
 router.get(`/`, function (req, res) {

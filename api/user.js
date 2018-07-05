@@ -61,6 +61,25 @@ var addUser = function (db, id, password, name, eMail, callback) {
   })
 }
 
+router.post('/process/changeUserPassword', function (req, res) {
+  console.log('process/changeUserPassword routing function is called.')
+
+  var paramID = req.body.userId || req.query.userId
+  var paramOldPassword = req.body.oldPassword || req.query.oldPassword
+  var paramNewPassword1 = req.body.newPassword1 || req.query.newPassword1
+  var paramNewPassword2 = req.body.newPassword2 || req.query.newPassword2
+
+  console.log('Request parameter : ' + paramID + ', ' + paramOldPassword + ', ' + paramNewPassword1 + ', ' + paramNewPassword2)
+
+  if (database) {
+    userModel.findUserId(paramID, function (err, results) {
+      if (err) {
+        console.log('An error during find user Id')
+      }
+    })
+  }
+})
+
 // An router that find user ID using eMail
 router.get('/process/findUserId', function (req, res) {
   console.log('/process/findUserId routing function is called.')

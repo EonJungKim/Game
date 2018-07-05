@@ -1,5 +1,4 @@
 var mongoose = require('mongoose')
-var bcrypt = require('bcrypt-nodejs')
 
 // 암호화 Module
 var crypto = require('crypto')
@@ -126,7 +125,7 @@ userSchema.path('password').validate(function (v) {
       user.invalidate('passwordConfirmation', 'Password Confirmation does not matched!')
     }
   }
-})*/
+}) */
 
 // userSchema와 user를 연결해서 userModel에 assign 후 model을 export
 var userModel = mongoose.model('user', userSchema)
